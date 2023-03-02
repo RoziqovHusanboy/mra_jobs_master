@@ -19,10 +19,10 @@ fun Nav_Graph() {
             Second(navController)
         }
         composable(BottomNavItem.Profile.screen_route){
-            Profile()
+            Profile(navController)
         }
         composable(BottomNavItem.Notifications.screen_route){
-            Notifications()
+            Notifications(navController)
         }
         composable(BottomNavItem.Home.screen_route){
             Home(navController)
