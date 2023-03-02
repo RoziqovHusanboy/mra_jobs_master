@@ -45,7 +45,10 @@ fun Head(navController: NavController) {
             )
         }
     , bottomBar = { tj.mra.jobs.BottomNavigation(navController = navController)}
+
     ) {
+
+
         Column {
 
             LazyColumn() {
@@ -55,6 +58,7 @@ fun Head(navController: NavController) {
                     })
                 }
             }
+            Nav_Graph()
 
         }
 

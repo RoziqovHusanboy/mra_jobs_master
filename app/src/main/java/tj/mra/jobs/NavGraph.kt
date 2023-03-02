@@ -24,8 +24,7 @@ fun Nav_Graph() {
         composable(BottomNavItem.Notifications.screen_route){
             Notifications(navController)
         }
-        composable(BottomNavItem.Home.screen_route){
-            Home(navController)
-        }
+
+
     }
 }
