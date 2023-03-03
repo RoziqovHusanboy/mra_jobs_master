@@ -16,7 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 @Composable
 fun BottomNavigation(navController: NavController) {
         var items = listOf(
-            BottomNavItem.Home,
+            BottomNavItem.Head,
             BottomNavItem.Notifications,
             BottomNavItem.Profile
         )

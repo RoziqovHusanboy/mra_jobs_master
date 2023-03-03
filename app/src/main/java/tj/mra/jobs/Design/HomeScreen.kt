@@ -19,18 +19,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import tj.mra.jobs.Nav_Graph
 import tj.mra.jobs.R
 import tj.mra.jobs.list
 
 @Composable
-fun Home(navController: NavController) {
-    Head(navController)
-}
-
-@Composable
-fun Head(navController: NavController) {
+fun Home() {
+    var navController = rememberNavController()
     Scaffold(
         modifier = Modifier,
         topBar = {
@@ -44,22 +41,24 @@ fun Head(navController: NavController) {
                 }, backgroundColor = colorResource(id = R.color.background_topBar)
             )
         }
-    , bottomBar = { tj.mra.jobs.BottomNavigation(navController = navController)}
+        , bottomBar = { tj.mra.jobs.BottomNavigation(navController = navController)}
 
     ) {
 
+        Nav_Graph(navController = navController )
 
-        Column {
+    }
+}
+@Composable
+fun Head(navController:NavController) {
+    Column {
 
-            LazyColumn() {
-                items(items = list) {
-                    CardDemo(textTitle = it.title, textDesc = it.desc, onClick = {
-                        navController.navigate("second_screen")
-                    })
-                }
+        LazyColumn() {
+            items(items = list) {
+                CardDemo(textTitle = it.title, textDesc = it.desc, onClick = {
+                    navController.navigate("second_screen")
+                })
             }
-            Nav_Graph()
-
         }
 
     }
