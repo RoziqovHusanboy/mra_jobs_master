@@ -2,16 +2,21 @@
 
 package tj.mra.jobs.Design
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.colorResource
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,35 +25,88 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import tj.mra.jobs.Nav_Graph
+import kotlinx.coroutines.launch
+import tj.mra.jobs.*
+import tj.mra.jobs.BottomNavItem.Head.title
 import tj.mra.jobs.R
-import tj.mra.jobs.list
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Home() {
+
+
+
     var navController = rememberNavController()
+
+    var currentscreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
+
     Scaffold(
         modifier = Modifier,
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "MRA Jobs",
-                        fontSize = 28.sp,
-                        modifier = Modifier.padding(start = 20.dp)
-                    )
+
+                TopAppBar(
+
+                title =
+                    {
+                        if (currentscreen==BottomNavItem.Head.screen_route) {
+                            Text(
+                                text = "MRA Jobs",
+                                fontSize = 28.sp,
+                                modifier = Modifier.padding(start = 20.dp)
+                            )
+
+                        }
+                         else if (currentscreen==Screens.Second_screen.route){
+                            Text(
+                                text = "Администратор",
+                                fontSize = 28.sp,
+                                modifier = Modifier.padding(start = 20.dp)
+                            )
+                        }
+                        else if (currentscreen==BottomNavItem.Profile.screen_route){
+                            Text(
+                                text = "Profile",
+                                fontSize = 28.sp,
+                                modifier = Modifier.padding(start = 20.dp)
+                            )
+                        }
+
+
+
+            },
+                navigationIcon = {
+                    if (currentscreen == Screens.Second_screen.route) {
+                        IconButton(onClick = {
+                            navController.navigate(BottomNavItem.Head.screen_route)
+                        }) {
+                            Icon(imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "")
+                        }
+                    }
                 }, backgroundColor = colorResource(id = R.color.background_topBar)
             )
+        },
+
+            bottomBar = {
+                if (currentscreen!=Screens.Second_screen.route) {
+                    tj.mra.jobs.BottomNavigation(navController = navController)
+                }
+
         }
-        , bottomBar = { tj.mra.jobs.BottomNavigation(navController = navController)}
 
     ) {
 
-        Nav_Graph(navController = navController )
+            Nav_Graph(navController = navController)
 
-    }
-}
+            }
+        }
+
+
+
+
+
 @Composable
 fun Head(navController:NavController) {
     Column {
@@ -56,7 +114,7 @@ fun Head(navController:NavController) {
         LazyColumn() {
             items(items = list) {
                 CardDemo(textTitle = it.title, textDesc = it.desc, onClick = {
-                    navController.navigate("second_screen")
+                    navController.navigate(Screens.Second_screen.route)
                 })
             }
         }
