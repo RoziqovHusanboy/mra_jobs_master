@@ -9,34 +9,30 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.launch
 import tj.mra.jobs.*
-import tj.mra.jobs.BottomNavItem.Head.title
 import tj.mra.jobs.R
+import tj.mra.jobs.retrofit.MovieViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Home() {
 
-
+    val viewModel: MovieViewModel = viewModel()
 
     var navController = rememberNavController()
 
@@ -44,53 +40,10 @@ fun Home() {
 
     Scaffold(
         modifier = Modifier,
-        topBar = {
-
-                TopAppBar(
-
-                title =
-                    {
-                        if (currentscreen==BottomNavItem.Head.screen_route) {
-                            Text(
-                                text = "MRA Jobs",
-                                fontSize = 28.sp,
-                                modifier = Modifier.padding(start = 20.dp)
-                            )
-
-                        }
-                         else if (currentscreen==Screens.Second_screen.route){
-                            Text(
-                                text = "Администратор",
-                                fontSize = 28.sp,
-                                modifier = Modifier.padding(start = 20.dp)
-                            )
-                        }
-                        else if (currentscreen==BottomNavItem.Profile.screen_route){
-                            Text(
-                                text = "Profile",
-                                fontSize = 28.sp,
-                                modifier = Modifier.padding(start = 20.dp)
-                            )
-                        }
-
-
-
-            },
-                navigationIcon = {
-                    if (currentscreen == Screens.Second_screen.route) {
-                        IconButton(onClick = {
-                            navController.navigate(BottomNavItem.Head.screen_route)
-                        }) {
-                            Icon(imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "")
-                        }
-                    }
-                }, backgroundColor = colorResource(id = R.color.background_topBar)
-            )
-        },
-
             bottomBar = {
-                if (currentscreen!=Screens.Second_screen.route) {
+                if (currentscreen==BottomNavItem.Head.screen_route
+                    ||currentscreen==BottomNavItem.Profile.screen_route
+                    ||currentscreen==BottomNavItem.Notifications.screen_route) {
                     tj.mra.jobs.BottomNavigation(navController = navController)
                 }
 
@@ -98,7 +51,7 @@ fun Home() {
 
     ) {
 
-            Nav_Graph(navController = navController)
+            Nav_Graph(navController = navController,viewModel=viewModel)
 
             }
         }
@@ -108,9 +61,19 @@ fun Home() {
 
 
 @Composable
-fun Head(navController:NavController) {
-    Column {
-
+fun Head(navController: NavController, viewModel: MovieViewModel) {
+    Column(modifier = Modifier.padding(bottom = 60.dp)) {
+     Text(
+            text = "MRA Jobs",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = colorResource(id = R.color.background_topBar),
+                )
+                .padding(start = 100.dp, bottom = 5.dp)
+        )
         LazyColumn() {
             items(items = list) {
                 CardDemo(textTitle = it.title, textDesc = it.desc, onClick = {

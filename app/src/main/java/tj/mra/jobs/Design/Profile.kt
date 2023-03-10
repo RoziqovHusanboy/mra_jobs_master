@@ -1,6 +1,5 @@
 package tj.mra.jobs.Design
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,27 +24,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
+import tj.mra.jobs.Screens
 import tj.mra.jobs.retrofit.Movie
 import tj.mra.jobs.retrofit.MovieViewModel
 
-
 @Composable
-fun Profile(navController: NavController) {
-    val viewModel: MovieViewModel = viewModel()
+fun Profile(navController: NavController,viewModel: MovieViewModel) {
+
     androidx.compose.material.Surface {
 
-  MovieList(movieList = viewModel.movieListResponse)
+  MovieList(movieList = viewModel.movieListResponse,navController=navController)
         viewModel.getMovieList()
 
 }
 }
 
 @Composable
-fun MovieList(movieList:List<Movie>) {
+fun MovieList(movieList:List<Movie>,navController: NavController) {
 
-    LazyColumn(){
+    LazyColumn(modifier = Modifier.padding(bottom = 60.dp)){
         itemsIndexed(items = movieList){index, item ->
-            tj.mra.jobs.Design.Movie(movie = item)
+            tj.mra.jobs.Design.Movie(movie = item,navController = navController)
         }
     }
 }
@@ -53,7 +52,7 @@ fun MovieList(movieList:List<Movie>) {
 
 
 @Composable
-fun Movie(movie: Movie){
+fun Movie(movie: Movie,navController: NavController){
 
     Card(
         modifier = Modifier
@@ -61,8 +60,7 @@ fun Movie(movie: Movie){
             .fillMaxWidth()
             .height(110.dp)
             .clickable {
-               // movieViewModel.getMovieList(movie.id )
-               // navController.navigate("second_screen/${movie.id}")
+           navController.navigate(Screens.Second_screen.route+"/${movie.name} / ${movie.desc}")
             },
         shape = RoundedCornerShape(8.dp),
         elevation = 4.dp
@@ -97,7 +95,7 @@ fun Movie(movie: Movie){
                         fontWeight = FontWeight.Bold
                     )
 
-                    Text(text = movie.desc,
+                    Text(text = movie.category,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier
                             .background(
@@ -105,7 +103,7 @@ fun Movie(movie: Movie){
                             .padding(4.dp))
 
                     Text(
-                        text = movie.category,
+                        text = movie.desc,
                         style = MaterialTheme.typography.body1,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
