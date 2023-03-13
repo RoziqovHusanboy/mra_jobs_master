@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.HiltAndroidApp
 import tj.mra.jobs.Design.Home
 import tj.mra.jobs.retrofit.MovieViewModel
 import tj.mra.jobs.ui.theme.MRAJobsTheme

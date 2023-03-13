@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,37 +20,50 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 import androidx.navigation.NavController
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.delay
 import tj.mra.jobs.Screens
 import tj.mra.jobs.retrofit.Movie
 import tj.mra.jobs.retrofit.MovieViewModel
 
 @Composable
 fun Profile(navController: NavController,viewModel: MovieViewModel) {
+    var movies_data: List<Movie>? = viewModel.getMovieList()
+    var movies: List<Movie> = listOf()
+    if (movies_data != null){
+        movies = movies_data
+    }
 
-    androidx.compose.material.Surface {
-
-  MovieList(movieList = viewModel.movieListResponse,navController=navController)
-        viewModel.getMovieList()
+    MovieList(movieList = movies,navController=navController)
 
 }
-}
+
 
 @Composable
 fun MovieList(movieList:List<Movie>,navController: NavController) {
 
-    LazyColumn(modifier = Modifier.padding(bottom = 60.dp)){
-        itemsIndexed(items = movieList){index, item ->
-            tj.mra.jobs.Design.Movie(movie = item,navController = navController)
+        LazyColumn(modifier = Modifier.padding(bottom = 60.dp)){
+            itemsIndexed(items = movieList){index, item ->
+                Movie(
+                    movie = item,
+                    navController = navController,
+                )
+            }
         }
+
     }
-}
+
+
+
 
 
 
 @Composable
-fun Movie(movie: Movie,navController: NavController){
+fun Movie(movie: Movie,navController: NavController,modifier: Modifier =Modifier){
 
     Card(
         modifier = Modifier
@@ -60,27 +71,36 @@ fun Movie(movie: Movie,navController: NavController){
             .fillMaxWidth()
             .height(110.dp)
             .clickable {
-           navController.navigate(Screens.Second_screen.route+"/${movie.name} / ${movie.desc}")
+                navController.navigate(Screens.Second_screen.route + "/${movie.name}")
             },
         shape = RoundedCornerShape(8.dp),
         elevation = 4.dp
     ) {
         androidx.compose.material.Surface {
+
+            var painter  =rememberImagePainter(data = movie.imageUrl,
+                builder ={
+                    scale(coil.size.Scale.FILL)
+                    placeholder(coil.compose.base.R.drawable.notification_action_background)
+                    transformations(CircleCropTransformation())
+                    crossfade(2000)
+                })
+
+            var painterState = painter.state
             Row (Modifier
                 .padding(4.dp)
                 .fillMaxSize()){
-                Image(painter = rememberImagePainter(data = movie.imageUrl,
-                    builder ={
-                        scale(coil.size.Scale.FILL)
-                        placeholder(coil.compose.base.R.drawable.notification_action_background)
-                        transformations(CircleCropTransformation())
-                    }),
+                Image(painter = painter,
                     contentDescription = movie.desc,
                     Modifier
                         .fillMaxHeight()
                         .weight(0.2f)
 
                 )
+
+              /* if (painterState is ImagePainter.State.Loading){
+                    CircularProgressIndicator()
+                } */
 
                 Column(
                     verticalArrangement = Arrangement.Center,

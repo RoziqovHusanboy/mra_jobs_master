@@ -16,17 +16,18 @@ fun Nav_Graph(navController:NavHostController,viewModel: MovieViewModel) {
                 Head(navController =navController,viewModel = viewModel)
             }
 
-        composable(Screens.Second_screen.route + "/{name}/{desc}"){
+        composable(Screens.Second_screen.route + "/{name}"){
         Second(navController =navController,viewModel = viewModel,
-            movieName = it.arguments?.getString("name")?:"name",
-            movieDesc = it.arguments?.getString("desc")?:"desc")
-
+            movieName = it.arguments?.getString("name")?:"name")
         }
         composable(BottomNavItem.Profile.screen_route){
             Profile(navController,viewModel = viewModel)
         }
         composable(BottomNavItem.Notifications.screen_route){
             Notifications(navController)
+        }
+        composable("add"){
+            Add(navController=navController)
         }
 
 

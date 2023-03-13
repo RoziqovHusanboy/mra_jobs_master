@@ -2,6 +2,7 @@
 
 package tj.mra.jobs.Design
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import tj.mra.jobs.*
 import tj.mra.jobs.R
 import tj.mra.jobs.retrofit.MovieViewModel
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Home() {
